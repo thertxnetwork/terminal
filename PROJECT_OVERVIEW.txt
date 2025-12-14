@@ -8,7 +8,7 @@
 └──────────────────────────────────────────────────────────────────────────────┘
 
 Package Name:        com.thertxnetwork.terminal
-Language:            Kotlin 1.9.0
+Language:            Kotlin 1.9.20
 Java Compatibility:  Java 21
 Design System:       Material Design 3 (Material You)
 Theme Support:       Light & Dark modes with runtime switching

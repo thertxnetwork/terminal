@@ -90,7 +90,7 @@ implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 - **Min SDK**: 24 (Android 7.0 Nougat)
 - **Target SDK**: 34 (Android 14)
 - **Compile SDK**: 34
-- **Kotlin Version**: 1.9.0
+- **Kotlin Version**: 1.9.20
 - **Gradle Plugin**: 8.1.0
 - **Java Version**: 21
 
