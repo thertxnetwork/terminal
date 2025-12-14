@@ -50,10 +50,8 @@ class MainActivity : AppCompatActivity() {
         
         // For Android 11 (API 30) and above, use WindowInsetsController
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.setSystemBarsAppearance(
-                if (isLightTheme) 0 else android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BAR,
-                android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BAR
-            )
+            val appearance = if (isLightTheme) 0 else 0x00000008 // APPEARANCE_LIGHT_STATUS_BAR = 0x00000008
+            window.insetsController?.setSystemBarsAppearance(appearance, 0x00000008)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // For Android 6.0 (API 23) and above
             @Suppress("DEPRECATION")
