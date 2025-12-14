@@ -30,16 +30,16 @@ Kotlin JVM Target:   21
 └──────────────────────────────────────────────────────────────────────────────┘
 
 LIGHT THEME:
-  • Background:      #FFFFFF (Pure white)
-  • Primary:         #000000 (Black)
-  • Surface:         #FFFFFF (White)
+  • Background:      #FFFBFE (Off-white)
+  • Primary:         #6750A4 (Purple)
+  • Surface:         #FFFBFE (Off-white)
   • On Primary:      #FFFFFF (White text)
 
 DARK THEME:
-  • Background:      #000000 (Pure black)
-  • Primary:         #FFFFFF (White)
-  • Surface:         #000000 (Black)
-  • On Primary:      #000000 (Black text)
+  • Background:      #1C1B1F (Dark gray)
+  • Primary:         #D0BCFF (Light purple)
+  • Surface:         #1C1B1F (Dark)
+  • On Primary:      #381E72 (Dark purple)
 
 COMPONENTS:
   ✓ MaterialCardView    - Elevated cards with 16dp corner radius

@@ -13,8 +13,8 @@ The app uses the latest Material Design 3 (Material You) guidelines with:
 - Rounded corners and modern shapes
 
 ### 2. Theme Support
-- **Light Theme**: Bright, clean interface with pure white background and black accents
-- **Dark Theme**: Pure black background for reduced eye strain with white accents
+- **Light Theme**: Bright, clean interface with purple accent color (#6750A4)
+- **Dark Theme**: Light purple primary (#D0BCFF) with Material Design 3 colors
 - **Theme Switcher**: Users can toggle between themes at runtime
 
 ### 3. UI Components
