@@ -25,7 +25,7 @@ terminal/
 ├── app/
 │   ├── src/
 │   │   └── main/
-│   │       ├── java/com/terminal/app/
+│   │       ├── java/com/thertxnetwork/terminal/
 │   │       │   └── MainActivity.kt
 │   │       ├── res/
 │   │       │   ├── layout/
