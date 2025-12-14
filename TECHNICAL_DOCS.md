@@ -91,7 +91,7 @@ implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 - **Target SDK**: 34 (Android 14)
 - **Compile SDK**: 34
 - **Kotlin Version**: 1.9.20
-- **Gradle Plugin**: 8.1.0
+- **Gradle Plugin**: 8.2.0
 - **Java Version**: 21
 
 ## How to Build

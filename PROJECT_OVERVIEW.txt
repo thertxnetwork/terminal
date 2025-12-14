@@ -21,7 +21,7 @@ Min SDK:             24 (Android 7.0 Nougat)
 Target SDK:          34 (Android 14)
 Compile SDK:         34
 Gradle:              8.2
-Android Plugin:      8.1.0
+Android Plugin:      8.2.0
 Java Version:        21
 Kotlin JVM Target:   21
 
