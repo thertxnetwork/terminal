@@ -102,7 +102,7 @@ terminal/
 
 To build this app, you'll need:
 1. Android Studio (Arctic Fox or later)
-2. JDK 8 or higher
+2. JDK 21 or higher
 3. Android SDK Platform 34
 
 Build command:

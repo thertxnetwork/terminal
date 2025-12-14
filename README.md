@@ -47,7 +47,7 @@ terminal/
 ### Prerequisites
 
 - Android Studio (latest version recommended)
-- JDK 8 or higher
+- JDK 21 or higher
 - Android SDK with API 34
 
 ### Build Instructions
