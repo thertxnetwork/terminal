@@ -1,53 +1,46 @@
 # Terminal Android App
 
-A simple, basic Android application built with Kotlin and Material Design 3, featuring dynamic color theming with both dark and light mode support.
+A modern Android terminal emulator built with Kotlin and Material Design 3. Features a fully functional terminal with VT100/ANSI escape sequence support, 256-color mode, and text styling.
 
 ## Features
 
-- **Material Design 3**: Modern UI components following the latest Material Design guidelines
-- **Dynamic Theming**: Support for both light and dark color themes
-- **Theme Switcher**: Toggle between light and dark modes within the app
-- **Kotlin**: Built entirely with Kotlin
-- **Clean Architecture**: Simple, well-organized project structure
+- **Full Terminal Emulation**: VT100/ANSI escape sequence support
+- **256 Color Support**: Full 256-color palette with SGR codes
+- **Text Styling**: Bold, italic, underline, strikethrough, and inverse video
+- **Modern UI**: Clean, monospace terminal display
+- **Shell Integration**: Runs `/system/bin/sh` with proper I/O handling
+- **Keyboard Support**: Hardware keyboard with special keys and modifiers
+- **Dynamic Sizing**: Automatically calculates terminal dimensions
+
+## Terminal Implementation
+
+This app includes a **newly created** terminal emulator implementation that references the architecture of NeoTerm but is written from scratch in modern Kotlin.
+
+### Core Components
+
+- **TerminalEmulator**: Processes VT100/ANSI escape sequences
+- **TerminalSession**: Manages shell process and I/O
+- **TerminalBuffer**: Maintains screen buffer with styled characters
+- **TerminalView**: Custom Android view for rendering terminal
+- **TerminalColorScheme**: 256-color palette management
+- **TextStyle**: Character-level styling attributes
+
+See [TERMINAL_IMPLEMENTATION.md](TERMINAL_IMPLEMENTATION.md) for detailed documentation.
 
 ## Tech Stack
 
 - **Language**: Kotlin
 - **Minimum SDK**: API 24 (Android 7.0)
 - **Target SDK**: API 34 (Android 14)
-- **UI Framework**: Material Design 3 (Material Components 1.11.0)
 - **Build System**: Gradle
-
-## Project Structure
-
-```
-terminal/
-├── app/
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/com/thertxnetwork/terminal/
-│   │       │   └── MainActivity.kt
-│   │       ├── res/
-│   │       │   ├── layout/
-│   │       │   │   └── activity_main.xml
-│   │       │   ├── values/
-│   │       │   │   ├── colors.xml
-│   │       │   │   ├── strings.xml
-│   │       │   │   └── themes.xml
-│   │       │   └── values-night/
-│   │       │       └── themes.xml
-│   │       └── AndroidManifest.xml
-│   └── build.gradle
-├── build.gradle
-└── settings.gradle
-```
+- **UI**: Custom Canvas-based rendering
 
 ## Building the Project
 
 ### Prerequisites
 
 - Android Studio (latest version recommended)
-- JDK 21 or higher
+- JDK 17 or higher
 - Android SDK with API 34
 
 ### Build Instructions
@@ -69,22 +62,45 @@ Alternatively, build from command line:
 ./gradlew assembleDebug
 ```
 
-## Material Design 3 Implementation
+## How It Works
 
-The app implements Material Design 3 with:
-- **Color System**: Complete Material 3 color palette for both themes
-- **Typography**: Material 3 text styles (Headline, Title, Body)
-- **Components**: MaterialCardView, MaterialButton, SwitchMaterial
-- **Elevation & Shadows**: Proper elevation for depth
-- **Corner Radius**: Rounded corners following MD3 guidelines
+1. **MainActivity** creates and initializes the terminal components
+2. **TerminalSession** starts a shell process and reads output
+3. **TerminalEmulator** processes escape sequences and updates the buffer
+4. **TerminalView** renders the buffer content with colors and styles
+5. User input from keyboard is sent to the shell process
 
-## Theme Support
+## Supported Features
 
-The app includes two complete themes:
-- **Light Theme**: Clean, bright interface with purple primary color (#6750A4)
-- **Dark Theme**: Easy on the eyes with light purple accents (#D0BCFF)
+### ANSI Escape Sequences
 
-Users can switch between themes using the toggle switch in the app interface.
+- ✅ Cursor positioning and movement
+- ✅ Screen clearing
+- ✅ Text colors (16 ANSI + 256 color mode)
+- ✅ Text styling (bold, italic, underline, etc.)
+- ✅ Inverse video
+- ✅ Window title setting
+
+### Keyboard
+
+- ✅ Character input
+- ✅ Special keys (Enter, Tab, Backspace)
+- ✅ Arrow keys
+- ✅ Control and Alt modifiers
+
+## Future Enhancements
+
+- [ ] Native PTY support via JNI
+- [ ] Text selection and copy/paste
+- [ ] Scrollback buffer
+- [ ] Multiple terminal tabs
+- [ ] Customizable color schemes
+- [ ] Font size adjustment
+- [ ] Hardware keyboard shortcuts
+
+## Credits
+
+Architecture inspired by [NeoTerm](https://github.com/NeoTerrm/NeoTerm) - an older Android terminal app. This implementation is completely new and written from scratch with modern Kotlin practices.
 
 ## License
 

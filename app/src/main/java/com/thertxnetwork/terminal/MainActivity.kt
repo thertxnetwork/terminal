@@ -1,71 +1,67 @@
 package com.thertxnetwork.terminal
 
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.thertxnetwork.terminal.terminal.TerminalEmulator
+import com.thertxnetwork.terminal.terminal.TerminalSession
+import com.thertxnetwork.terminal.terminal.TerminalView
 
 class MainActivity : AppCompatActivity() {
+    
+    private lateinit var terminalView: TerminalView
+    private lateinit var terminalEmulator: TerminalEmulator
+    private lateinit var terminalSession: TerminalSession
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        // Apply status bar color theme
-        applyStatusBarTheme()
-
-        val themeSwitch = findViewById<SwitchMaterial>(R.id.themeSwitch)
         
-        // Check current theme
-        val currentNightMode = AppCompatDelegate.getDefaultNightMode()
-        themeSwitch.isChecked = currentNightMode == AppCompatDelegate.MODE_NIGHT_YES
-
-        // Set up theme switcher
-        themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        // Create terminal view programmatically
+        terminalView = TerminalView(this)
+        setContentView(terminalView)
+        
+        // Initialize terminal emulator
+        terminalEmulator = TerminalEmulator(80, 24)
+        terminalView.setTerminalEmulator(terminalEmulator)
+        
+        // Create and start terminal session with app's home directory
+        terminalSession = TerminalSession(
+            terminalEmulator,
+            homeDir = filesDir.absolutePath
+        )
+        terminalView.setTerminalSession(terminalSession)
+        
+        terminalSession.listener = object : TerminalSession.SessionListener {
+            override fun onSessionFinished(exitCode: Int) {
+                runOnUiThread {
+                    terminalView.appendText("\n[Process completed with exit code $exitCode]")
+                }
             }
         }
-
-        // Set up button click listener
-        findViewById<MaterialButton>(R.id.actionButton).setOnClickListener {
-            // Button action placeholder
-        }
-    }
-
-    private fun applyStatusBarTheme() {
-        // Get the primary color from the current theme
-        val primaryColor = MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimary, 0)
-        window.statusBarColor = primaryColor
         
-        // Determine if we should use light or dark status bar icons
-        // Light theme uses dark icons, dark theme uses light icons
-        val isLightTheme = (resources.configuration.uiMode and 
-            android.content.res.Configuration.UI_MODE_NIGHT_MASK) != 
-            android.content.res.Configuration.UI_MODE_NIGHT_YES
-        
-        // For Android 11 (API 30) and above, use WindowInsetsController
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val appearance = if (isLightTheme) 0 else 0x00000008 // APPEARANCE_LIGHT_STATUS_BAR = 0x00000008
-            window.insetsController?.setSystemBarsAppearance(appearance, 0x00000008)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // For Android 6.0 (API 23) and above
-            @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = if (isLightTheme) {
-                0 // Dark icons on light background
-            } else {
-                android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Light icons on dark background
+        terminalEmulator.listener = object : TerminalEmulator.TerminalListener {
+            override fun onBell() {
+                // Handle bell/beep sound
+            }
+            
+            override fun onTitleChanged(title: String) {
+                runOnUiThread {
+                    setTitle(title)
+                }
+            }
+            
+            override fun onScreenUpdated() {
+                runOnUiThread {
+                    terminalView.invalidate()
+                }
             }
         }
+        
+        // Start the terminal session
+        terminalSession.start()
     }
-
-    override fun onResume() {
-        super.onResume()
-        // Reapply status bar theme when activity resumes (e.g., after theme change)
-        applyStatusBarTheme()
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        terminalSession.close()
     }
 }
