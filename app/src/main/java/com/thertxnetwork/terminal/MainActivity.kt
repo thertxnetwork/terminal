@@ -23,8 +23,11 @@ class MainActivity : AppCompatActivity() {
         terminalEmulator = TerminalEmulator(80, 24)
         terminalView.setTerminalEmulator(terminalEmulator)
         
-        // Create and start terminal session
-        terminalSession = TerminalSession(terminalEmulator)
+        // Create and start terminal session with app's home directory
+        terminalSession = TerminalSession(
+            terminalEmulator,
+            homeDir = filesDir.absolutePath
+        )
         terminalView.setTerminalSession(terminalSession)
         
         terminalSession.listener = object : TerminalSession.SessionListener {

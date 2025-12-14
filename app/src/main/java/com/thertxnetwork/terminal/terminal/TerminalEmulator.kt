@@ -205,9 +205,10 @@ class TerminalEmulator(cols: Int, rows: Int) {
                 in 40..47 -> currentStyle = currentStyle.copy(backgroundColor = param - 40)
                 in 100..107 -> currentStyle = currentStyle.copy(backgroundColor = param - 100 + 8)
                 
-                // 256 color mode
+                // 256 color mode and true color
                 38, 48 -> {
                     if (i + 2 < params.size && params[i + 1] == 5) {
+                        // 256-color mode: ESC[38;5;Nm or ESC[48;5;Nm
                         val color = params[i + 2]
                         if (param == 38) {
                             currentStyle = currentStyle.copy(foregroundColor = color)
@@ -216,7 +217,10 @@ class TerminalEmulator(cols: Int, rows: Int) {
                         }
                         i += 2
                     } else if (i + 4 < params.size && params[i + 1] == 2) {
-                        // True color (not fully implemented - use closest 256 color)
+                        // True color (24-bit RGB): ESC[38;2;R;G;Bm or ESC[48;2;R;G;Bm
+                        // Note: Currently not fully supported - we map to closest 256-color
+                        // TODO: Implement true color support by storing RGB values directly
+                        // For now, skip the RGB parameters to avoid parsing errors
                         i += 4
                     }
                 }

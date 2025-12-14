@@ -13,6 +13,10 @@ data class StyledChar(
  */
 class TerminalBuffer(var cols: Int, var rows: Int) {
     
+    companion object {
+        private const val TAB_STOP = 8
+    }
+    
     private val lines = mutableListOf<MutableList<StyledChar>>()
     var cursorRow = 0
         private set
@@ -85,8 +89,8 @@ class TerminalBuffer(var cols: Int, var rows: Int) {
                     }
                 }
                 '\t' -> {
-                    // Tab - move to next 8-character boundary
-                    val nextTab = ((cursorCol / 8) + 1) * 8
+                    // Tab - move to next TAB_STOP-character boundary
+                    val nextTab = ((cursorCol / TAB_STOP) + 1) * TAB_STOP
                     cursorCol = nextTab.coerceAtMost(cols - 1)
                 }
                 else -> {

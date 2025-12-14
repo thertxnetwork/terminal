@@ -11,7 +11,8 @@ import java.io.*
  */
 class TerminalSession(
     private val emulator: TerminalEmulator,
-    private val shellPath: String = "/system/bin/sh"
+    private val shellPath: String = "/system/bin/sh",
+    private val homeDir: String? = null
 ) {
     
     private var process: Process? = null
@@ -39,7 +40,7 @@ class TerminalSession(
             // Set environment variables
             val env = processBuilder.environment()
             env["TERM"] = "xterm-256color"
-            env["HOME"] = "/data/data/com.thertxnetwork.terminal"
+            env["HOME"] = homeDir ?: "/data/data/com.thertxnetwork.terminal"
             env["PATH"] = "/system/bin:/system/xbin"
             
             process = processBuilder.start()
