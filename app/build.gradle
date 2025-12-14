@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.terminal.app'
+    namespace 'com.thertxnetwork.terminal'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.terminal.app"
+        applicationId "com.thertxnetwork.terminal"
         minSdk 24
         targetSdk 34
         versionCode 1

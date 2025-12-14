@@ -1,4 +1,4 @@
-package com.terminal.app
+package com.thertxnetwork.terminal
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
