@@ -2,10 +2,8 @@ package com.thertxnetwork.terminal
 
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -53,8 +51,8 @@ class MainActivity : AppCompatActivity() {
         // For Android 11 (API 30) and above, use WindowInsetsController
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.setSystemBarsAppearance(
-                if (isLightTheme) 0 else WindowInsetsController.APPEARANCE_LIGHT_STATUS_BAR,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BAR
+                if (isLightTheme) 0 else android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BAR,
+                android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BAR
             )
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // For Android 6.0 (API 23) and above
