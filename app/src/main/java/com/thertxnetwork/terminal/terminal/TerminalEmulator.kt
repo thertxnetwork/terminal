@@ -14,6 +14,7 @@ class TerminalEmulator(cols: Int, rows: Int) {
     interface TerminalListener {
         fun onBell()
         fun onTitleChanged(title: String)
+        fun onScreenUpdated()
     }
     
     var listener: TerminalListener? = null
@@ -24,6 +25,7 @@ class TerminalEmulator(cols: Int, rows: Int) {
     fun processInput(data: ByteArray, length: Int) {
         val text = String(data, 0, length, Charsets.UTF_8)
         processText(text)
+        listener?.onScreenUpdated()
     }
     
     private fun processText(text: String) {
@@ -122,9 +124,9 @@ class TerminalEmulator(cols: Int, rows: Int) {
         if (csi.isEmpty()) return
         
         val command = csi.last()
-        val params = if (csi.length > 1) {
-            csi.substring(0, csi.length - 1).split(';')
-                .mapNotNull { it.toIntOrNull() }
+        val paramStr = if (csi.length > 1) csi.substring(0, csi.length - 1) else ""
+        val params = if (paramStr.isNotEmpty()) {
+            paramStr.split(';').mapNotNull { it.toIntOrNull() }
         } else {
             emptyList()
         }
@@ -167,9 +169,67 @@ class TerminalEmulator(cols: Int, rows: Int) {
                 // Erase line (simplified)
             }
             'm' -> {
-                // Set graphics mode (colors, bold, etc.) - simplified
+                // Set graphics mode (colors, bold, etc.)
+                processSGR(params)
             }
         }
+    }
+    
+    private fun processSGR(params: List<Int>) {
+        var currentStyle = buffer.currentStyle
+        var i = 0
+        
+        while (i < params.size) {
+            val param = params[i]
+            
+            when (param) {
+                0 -> currentStyle = TextStyle.DEFAULT // Reset
+                1 -> currentStyle = currentStyle.copy(bold = true)
+                3 -> currentStyle = currentStyle.copy(italic = true)
+                4 -> currentStyle = currentStyle.copy(underline = true)
+                5, 6 -> currentStyle = currentStyle.copy(blink = true)
+                7 -> currentStyle = currentStyle.copy(inverse = true)
+                9 -> currentStyle = currentStyle.copy(strikethrough = true)
+                22 -> currentStyle = currentStyle.copy(bold = false)
+                23 -> currentStyle = currentStyle.copy(italic = false)
+                24 -> currentStyle = currentStyle.copy(underline = false)
+                25 -> currentStyle = currentStyle.copy(blink = false)
+                27 -> currentStyle = currentStyle.copy(inverse = false)
+                29 -> currentStyle = currentStyle.copy(strikethrough = false)
+                
+                // Foreground colors (30-37, 90-97)
+                in 30..37 -> currentStyle = currentStyle.copy(foregroundColor = param - 30)
+                in 90..97 -> currentStyle = currentStyle.copy(foregroundColor = param - 90 + 8)
+                
+                // Background colors (40-47, 100-107)
+                in 40..47 -> currentStyle = currentStyle.copy(backgroundColor = param - 40)
+                in 100..107 -> currentStyle = currentStyle.copy(backgroundColor = param - 100 + 8)
+                
+                // 256 color mode
+                38, 48 -> {
+                    if (i + 2 < params.size && params[i + 1] == 5) {
+                        val color = params[i + 2]
+                        if (param == 38) {
+                            currentStyle = currentStyle.copy(foregroundColor = color)
+                        } else {
+                            currentStyle = currentStyle.copy(backgroundColor = color)
+                        }
+                        i += 2
+                    } else if (i + 4 < params.size && params[i + 1] == 2) {
+                        // True color (not fully implemented - use closest 256 color)
+                        i += 4
+                    }
+                }
+                
+                // Default colors
+                39 -> currentStyle = currentStyle.copy(foregroundColor = -1)
+                49 -> currentStyle = currentStyle.copy(backgroundColor = -1)
+            }
+            
+            i++
+        }
+        
+        buffer.currentStyle = currentStyle
     }
     
     private fun processOscSequence(sequence: String) {

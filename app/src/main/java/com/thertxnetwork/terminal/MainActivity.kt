@@ -45,6 +45,12 @@ class MainActivity : AppCompatActivity() {
                     setTitle(title)
                 }
             }
+            
+            override fun onScreenUpdated() {
+                runOnUiThread {
+                    terminalView.invalidate()
+                }
+            }
         }
         
         // Start the terminal session

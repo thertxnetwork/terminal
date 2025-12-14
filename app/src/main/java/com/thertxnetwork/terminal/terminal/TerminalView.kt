@@ -24,10 +24,9 @@ class TerminalView @JvmOverloads constructor(
         color = 0xFFFFFFFF.toInt() // White text
     }
 
-    private val backgroundPaint = Paint().apply {
-        color = 0xFF000000.toInt() // Black background
-    }
-
+    private val backgroundPaint = Paint()
+    
+    private val colorScheme = TerminalColorScheme()
     private var terminalBuffer: TerminalBuffer = TerminalBuffer(80, 24)
     private var terminalSession: TerminalSession? = null
     private var charWidth = 0f
@@ -38,6 +37,9 @@ class TerminalView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
         measureTextDimensions()
+        
+        // Set default colors
+        backgroundPaint.color = colorScheme.defaultBackground
     }
 
     private fun measureTextDimensions() {
@@ -68,6 +70,7 @@ class TerminalView @JvmOverloads constructor(
             
             if (cols > 0 && rows > 0) {
                 terminalBuffer.resize(cols, rows)
+                terminalSession?.resize(cols, rows)
             }
         }
         
@@ -80,17 +83,41 @@ class TerminalView @JvmOverloads constructor(
         // Draw background
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
         
-        // Draw terminal text
+        // Draw terminal text with colors and styles
         val rows = terminalBuffer.rows
-        val cols = terminalBuffer.cols
         
         for (row in 0 until rows) {
-            val line = terminalBuffer.getLine(row)
-            if (line.isNotEmpty()) {
-                val y = (row + 1) * charHeight - charDescent
-                canvas.drawText(line, 0f, y, textPaint)
+            val styledLine = terminalBuffer.getStyledLine(row)
+            if (styledLine.isEmpty()) continue
+            
+            val y = (row + 1) * charHeight - charDescent
+            var x = 0f
+            
+            for (styledChar in styledLine) {
+                val style = styledChar.style
+                
+                // Draw background for this character
+                val bgColor = style.getEffectiveBackground(colorScheme)
+                backgroundPaint.color = bgColor
+                canvas.drawRect(x, row * charHeight, x + charWidth, (row + 1) * charHeight, backgroundPaint)
+                
+                // Set text color and style
+                textPaint.color = style.getEffectiveForeground(colorScheme)
+                textPaint.isFakeBoldText = style.bold
+                textPaint.isUnderlineText = style.underline
+                textPaint.isStrikeThruText = style.strikethrough
+                
+                // Draw the character
+                canvas.drawText(styledChar.char.toString(), x, y, textPaint)
+                
+                x += charWidth
             }
         }
+        
+        // Reset text paint
+        textPaint.isFakeBoldText = false
+        textPaint.isUnderlineText = false
+        textPaint.isStrikeThruText = false
         
         // Draw cursor
         val cursorRow = terminalBuffer.cursorRow
@@ -100,6 +127,7 @@ class TerminalView @JvmOverloads constructor(
         
         val cursorPaint = Paint().apply {
             color = 0xFF00FF00.toInt() // Green cursor
+            alpha = 200
         }
         canvas.drawRect(
             cursorX,

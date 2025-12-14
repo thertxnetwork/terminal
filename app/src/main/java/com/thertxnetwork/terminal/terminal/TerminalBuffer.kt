@@ -1,20 +1,30 @@
 package com.thertxnetwork.terminal.terminal
 
 /**
- * Manages the terminal screen buffer, storing lines of text and cursor position.
+ * Represents a single character with its style in the terminal.
+ */
+data class StyledChar(
+    val char: Char,
+    val style: TextStyle = TextStyle.DEFAULT
+)
+
+/**
+ * Manages the terminal screen buffer, storing lines of text with styles and cursor position.
  */
 class TerminalBuffer(var cols: Int, var rows: Int) {
     
-    private val lines = mutableListOf<StringBuilder>()
+    private val lines = mutableListOf<MutableList<StyledChar>>()
     var cursorRow = 0
         private set
     var cursorCol = 0
         private set
     
+    var currentStyle = TextStyle.DEFAULT
+    
     init {
         // Initialize empty lines
         for (i in 0 until rows) {
-            lines.add(StringBuilder())
+            lines.add(mutableListOf())
         }
     }
     
@@ -26,7 +36,7 @@ class TerminalBuffer(var cols: Int, var rows: Int) {
         
         // Adjust number of lines
         while (lines.size < rows) {
-            lines.add(StringBuilder())
+            lines.add(mutableListOf())
         }
         while (lines.size > rows) {
             lines.removeAt(lines.size - 1)
@@ -39,7 +49,12 @@ class TerminalBuffer(var cols: Int, var rows: Int) {
     
     fun getLine(row: Int): String {
         if (row < 0 || row >= lines.size) return ""
-        return lines[row].toString()
+        return lines[row].map { it.char }.joinToString("")
+    }
+    
+    fun getStyledLine(row: Int): List<StyledChar> {
+        if (row < 0 || row >= lines.size) return emptyList()
+        return lines[row]
     }
     
     fun appendText(text: String) {
@@ -52,7 +67,7 @@ class TerminalBuffer(var cols: Int, var rows: Int) {
                     if (cursorRow >= rows) {
                         // Scroll up
                         lines.removeAt(0)
-                        lines.add(StringBuilder())
+                        lines.add(mutableListOf())
                         cursorRow = rows - 1
                     }
                 }
@@ -64,8 +79,8 @@ class TerminalBuffer(var cols: Int, var rows: Int) {
                     // Backspace
                     if (cursorCol > 0) {
                         cursorCol--
-                        if (cursorCol < lines[cursorRow].length) {
-                            lines[cursorRow].deleteCharAt(cursorCol)
+                        if (cursorCol < lines[cursorRow].size) {
+                            lines[cursorRow].removeAt(cursorCol)
                         }
                     }
                 }
@@ -82,15 +97,16 @@ class TerminalBuffer(var cols: Int, var rows: Int) {
                     
                     // Ensure line is long enough
                     val line = lines[cursorRow]
-                    while (line.length < cursorCol) {
-                        line.append(' ')
+                    while (line.size < cursorCol) {
+                        line.add(StyledChar(' ', currentStyle))
                     }
                     
-                    // Insert or replace character
-                    if (cursorCol < line.length) {
-                        line[cursorCol] = char
+                    // Insert or replace character with current style
+                    val styledChar = StyledChar(char, currentStyle)
+                    if (cursorCol < line.size) {
+                        line[cursorCol] = styledChar
                     } else {
-                        line.append(char)
+                        line.add(styledChar)
                     }
                     
                     cursorCol++
@@ -102,7 +118,7 @@ class TerminalBuffer(var cols: Int, var rows: Int) {
                         if (cursorRow >= rows) {
                             // Scroll up
                             lines.removeAt(0)
-                            lines.add(StringBuilder())
+                            lines.add(mutableListOf())
                             cursorRow = rows - 1
                         }
                     }
@@ -114,7 +130,7 @@ class TerminalBuffer(var cols: Int, var rows: Int) {
     fun clear() {
         lines.clear()
         for (i in 0 until rows) {
-            lines.add(StringBuilder())
+            lines.add(mutableListOf())
         }
         cursorRow = 0
         cursorCol = 0
