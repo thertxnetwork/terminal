@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Terminal</string>
+    <string name="app_title">Welcome to Terminal</string>
+    <string name="app_subtitle">A simple Material Design 3 app</string>
+    <string name="content_title">Material Design 3</string>
+    <string name="content_description">This app demonstrates Material Design 3 components with dynamic color theming and support for both light and dark modes.</string>
+    <string name="action_button">Get Started</string>
+    <string name="dark_mode">Dark Mode</string>
+</resources>
