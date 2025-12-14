@@ -81,8 +81,8 @@ The app implements Material Design 3 with:
 ## Theme Support
 
 The app includes two complete themes:
-- **Light Theme**: Clean, bright interface with purple primary color
-- **Dark Theme**: Easy on the eyes with reduced brightness
+- **Light Theme**: Clean, bright interface with pure white background and black accents
+- **Dark Theme**: Easy on the eyes with pure black background and white accents
 
 Users can switch between themes using the toggle switch in the app interface.
 

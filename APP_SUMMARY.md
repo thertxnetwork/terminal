@@ -14,8 +14,8 @@ A simple, basic Android application built with Kotlin that demonstrates Material
    - Proper elevation and rounded corners (16dp radius)
 
 ### 2. **Theme Support**
-   - Complete light theme with purple accent (#6750A4)
-   - Complete dark theme with light purple accent (#D0BCFF)
+   - Complete light theme with pure white background and black accents
+   - Complete dark theme with pure black background and white accents
    - Runtime theme switching via toggle switch
    - Proper color roles (primary, secondary, tertiary, error, etc.)
 

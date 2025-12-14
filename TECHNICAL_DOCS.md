@@ -13,8 +13,8 @@ The app uses the latest Material Design 3 (Material You) guidelines with:
 - Rounded corners and modern shapes
 
 ### 2. Theme Support
-- **Light Theme**: Bright, clean interface with purple accent color
-- **Dark Theme**: Dark background for reduced eye strain
+- **Light Theme**: Bright, clean interface with pure white background and black accents
+- **Dark Theme**: Pure black background for reduced eye strain with white accents
 - **Theme Switcher**: Users can toggle between themes at runtime
 
 ### 3. UI Components
@@ -57,15 +57,15 @@ All cards use Material 3 styling with 16dp corner radius and proper elevation.
 
 #### Light Theme (`values/themes.xml`)
 - Parent: `Theme.Material3.Light.NoActionBar`
-- Primary color: Purple (#6750A4)
-- Background: Near white (#FFFBFE)
+- Primary color: Black (#000000)
+- Background: Pure white (#FFFFFF)
 - Surface: White with proper on-surface colors
 
 #### Dark Theme (`values-night/themes.xml`)
 - Parent: `Theme.Material3.Dark.NoActionBar`
-- Primary color: Light purple (#D0BCFF)
-- Background: Dark (#1C1B1F)
-- Surface: Dark with proper contrast colors
+- Primary color: White (#FFFFFF)
+- Background: Pure black (#000000)
+- Surface: Black with proper contrast colors
 
 ### Color System
 The app includes a complete Material 3 color palette in `colors.xml`:
